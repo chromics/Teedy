@@ -1,13 +1,13 @@
 pipeline {
     agent any
-
-    stage('Checkout') {
+    
+    stages {
+        stage('Checkout') {
             steps {
                 git url: 'https://github.com/chromics/Teedy.git'
             }
         }
-    
-    stages {
+        
         stage('Clean') {
             steps {
                 sh 'mvn clean'
