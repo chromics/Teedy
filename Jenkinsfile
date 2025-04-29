@@ -2,16 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                git(
-                    url: 'https://github.com/chromics/Teedy.git',
-                    credentialsId: 'teedy-pat',
-                    branch: 'master'
-                )
-            }
-        }
-
         stage('Clean') {
             steps {
                 sh 'mvn clean'
