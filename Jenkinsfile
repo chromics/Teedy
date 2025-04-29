@@ -1,6 +1,17 @@
 pipeline {
     agent any
 
+    stage('Checkout') {
+            steps {
+                withCredentials([string(credentialsId: 'github PAT', variable: 'GIT_PAT')]) {
+                    sh '''
+                        git config --global credential.helper '!f() { echo "username=chromics"; echo "password=$GIT_PAT"; }; f'
+                        git clone https://github.com/chromics/Teedy.git
+                    '''
+                }
+            }
+        }
+    
     stages {
         stage('Clean') {
             steps {
