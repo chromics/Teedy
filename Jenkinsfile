@@ -6,8 +6,8 @@ pipeline {
             steps {
                 git(
                     url: 'https://github.com/chromics/Teedy.git',
-                    credentialsId: 'github PAT',
-                    branch: 'main'
+                    credentialsId: 'teedy-pat',
+                    branch: 'master'
                 )
             }
         }
