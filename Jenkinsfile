@@ -46,20 +46,17 @@ pipeline {
     stage('Run Containers') {
       steps {
         script {
-          // Stop and remove any existing containers on these ports
-          sh 'docker stop teedy-container-8082 || true'
-          sh 'docker rm teedy-container-8082 || true'
-          sh 'docker stop teedy-container-8083 || true'
-          sh 'docker rm teedy-container-8083 || true'
-          sh 'docker stop teedy-container-8084 || true'
-          sh 'docker rm teedy-container-8084 || true'
+          // Stop and remove any existing containers
+          sh 'docker rm -f teedy-container-8082 || true'
+          sh 'docker rm -f teedy-container-8083 || true'
+          sh 'docker rm -f teedy-container-8084 || true'
 
-          // Run three containers on different ports
-          docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run('--name teedy-container-8082 -d -p 8082:8080')
-          docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run('--name teedy-container-8083 -d -p 8083:8080')
-          docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run('--name teedy-container-8084 -d -p 8084:8080')
+          // Run three containers with the current image
+          sh "docker run --name teedy-container-8082 -d -p 8082:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+          sh "docker run --name teedy-container-8083 -d -p 8083:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+          sh "docker run --name teedy-container-8084 -d -p 8084:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
 
-          // List all teedy containers
+          // List running containers
           sh 'docker ps --filter "name=teedy-container"'
         }
       }
