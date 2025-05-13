@@ -1,68 +1,62 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/chromics/Teedy.git'
-            }
-        }
-        
-        stage('Clean') {
-            steps {
-                sh 'mvn clean'
-            }
-        }
-        
-        stage('Compile') {
-            steps {
-                sh 'mvn compile'
-            }
-        }
+  agent any
 
-        stage('Test') {
-            steps {
-                sh 'mvn test -Dmaven.test.failure.ignore=true'
-            }
-        }
+  environment {
+    // Docker Hub credentials ID stored in Jenkins
+    DOCKER_HUB_CREDENTIALS = credentials('dockerhub_login')
 
-        stage('PMD') {
-            steps {
-                sh 'mvn pmd:pmd'
-            }
-        }
+    // Docker Hub image name (username/repo)
+    DOCKER_IMAGE = '12310948/teedy'
 
-        stage('JaCoCo') {
-            steps {
-                sh 'mvn jacoco:report'
-            }
-        }
+    // Use Jenkins build number as Docker tag
+    DOCKER_TAG = "${BUILD_NUMBER}"
+  }
 
-        stage('Javadoc') {
-            steps {
-                sh 'mvn javadoc:javadoc'
-            }
-        }
-
-        stage('Site') {
-            steps {
-                sh 'mvn site'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
-            }
-        }
+  stages {
+    stage('Build') {
+      steps {
+        checkout scmGit(
+          branches: [[name: '*/master']],
+          extensions: [],
+          userRemoteConfigs: [[url: 'https://github.com/chromics/Teedy.git']]
+        )
+        sh 'mvn -B -DskipTests clean package'
+      }
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
-            junit '**/target/surefire-reports/*.xml'
+    stage('Build Docker Image') {
+      steps {
+        script {
+          docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
         }
+      }
     }
+
+    stage('Push to Docker Hub') {
+      steps {
+        script {
+          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_credentials') {
+            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest') // Optional
+          }
+        }
+      }
+    }
+
+    stage('Run Container') {
+      steps {
+        script {
+          // Stop and remove container if it already exists
+          sh 'docker stop teedy-container-8081 || true'
+          sh 'docker rm teedy-container-8081 || true'
+
+          // Run new container
+          docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run('--name teedy-container-8081 -d -p 8081:8080')
+
+          // List all teedy containers
+          sh 'docker ps --filter "name=teedy-container"'
+        }
+      }
+    }
+  }
 }
