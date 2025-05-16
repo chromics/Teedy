@@ -98,4 +98,53 @@ public class AuditLogDao {
 
         paginatedList.setResultList(auditLogDtoList);
     }
+
+    public List<AuditLogDto> findByDay(Date day) {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+
+        // compute start and end of day
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(day);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date startDate = cal.getTime();
+
+        cal.add(Calendar.DATE, 1);
+        Date endDate = cal.getTime();
+
+        // query view/edit/comment
+        String queryStr = """
+        select l.LOG_ID_C, l.LOG_CREATEDATE_D, u.USE_USERNAME_C,
+               l.LOG_IDENTITY_C, l.LOG_CLASSENTITY_C, l.LOG_TYPE_C,
+               l.LOG_MESSAGE_C
+          from T_AUDIT_LOG l
+          join T_USER u on l.LOG_IDUSER_C = u.USE_ID_C
+         where l.LOG_TYPE_C in ('View', 'Edit', 'Comment')
+           and l.LOG_CREATEDATE_D >= :startDate and l.LOG_CREATEDATE_D < :endDate
+         order by l.LOG_CREATEDATE_D asc
+        """;
+
+        List<Object[]> result = em.createNativeQuery(queryStr)
+                .setParameter("startDate", new java.sql.Timestamp(startDate.getTime()))
+                .setParameter("endDate", new java.sql.Timestamp(endDate.getTime()))
+                .getResultList();
+
+        List<AuditLogDto> dtoList = new ArrayList<>();
+        for (Object[] row : result) {
+            int i = 0;
+            AuditLogDto dto = new AuditLogDto();
+            dto.setId((String) row[i++]);
+            dto.setCreateTimestamp(((Timestamp) row[i++]).getTime());
+            dto.setUsername((String) row[i++]);
+            dto.setEntityId((String) row[i++]);
+            dto.setEntityClass((String) row[i++]);
+            dto.setType(AuditLogType.valueOf((String) row[i++]));
+            dto.setMessage((String) row[i++]);
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
 }
