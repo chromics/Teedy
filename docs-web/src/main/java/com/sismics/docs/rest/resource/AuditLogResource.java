@@ -125,7 +125,7 @@ public class AuditLogResource extends BaseResource {
      * @return Response
      */
     @GET
-    @Path("/daily-activity")
+    @Path("/admindashboard")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getDailyActivity(@QueryParam("date") String dateStr) {
         // be authenticated
@@ -150,9 +150,13 @@ public class AuditLogResource extends BaseResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid date format").build();
         }
 
+        System.out.println("Requested date: " + date);
+        System.out.println("Attempting to fetch logs for that day...");
+
         // get logs
         AuditLogDao auditLogDao = new AuditLogDao();
         List<AuditLogDto> logs = auditLogDao.findByDay(date);
+        System.out.println("Total logs fetched from DAO: " + logs.size());
 
         // build JSON response
         JsonArrayBuilder logsJson = Json.createArrayBuilder();
@@ -165,6 +169,10 @@ public class AuditLogResource extends BaseResource {
                     .add("type", log.getType().name())
                     .add("message", JsonUtil.nullable(log.getMessage()))
                     .add("create_date", log.getCreateTimestamp()));
+            System.out.println("LOG FOUND: username=" + log.getUsername()
+                    + ", type=" + log.getType()
+                    + ", class=" + log.getEntityClass()
+                    + ", date=" + new Date(log.getCreateTimestamp()));
         }
 
         JsonObjectBuilder response = Json.createObjectBuilder()

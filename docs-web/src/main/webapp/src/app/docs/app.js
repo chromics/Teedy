@@ -417,6 +417,15 @@ angular.module('docs',
           controller: 'GroupProfile'
         }
       }
+    })
+    .state('settings.AdminDashboard', {
+      url: '/admindashboard',
+      views: {
+        'settings': {
+          templateUrl: 'partial/docs/admindashboard.html',
+          controller: 'AdminDashboard'
+        }
+      }
     });
 
   // Configuring Restangular
