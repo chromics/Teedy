@@ -752,6 +752,35 @@ input[readonly].share-link {
   padding-right: 0;
 }
 
+// d3.js css
+.gantt-container {
+  font-family: Arial, sans-serif;
+}
+#timeline .x-axis path, #timeline .x-axis line,
+#timeline .y-axis path, #timeline .y-axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+#timeline .x-axis text {
+  font-size: 14px; /* For readability */
+  text-anchor: middle;
+}
+#timeline .y-axis text {
+  font-size: 14px; /* Smaller font for 60px width */
+  text-anchor: end; /* Align wrapped text to the right */
+}
+#timeline .event-tick {
+  stroke-width: 2px;
+}
+#timeline svg {
+  cursor: move; /* Indicate panning */
+  user-select: none; /* Prevent text selection during pan */
+}
+#timeline {
+  overflow: hidden; /* Prevent scrollbars during zoom */
+}
+
 // Timeline row height fixes
 .vis-content {
   height: auto !important;

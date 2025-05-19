@@ -4,62 +4,33 @@
             <button class="btn btn-default" ng-click="previousDay()">
                 <span class="fas fa-chevron-left"></span>
             </button>
-            <span class="h4" style="margin: 0 10px;">{{ date | date:'yyyy-MM-dd' }}</span>
+            <input type="date" ng-model="date" ng-change="onDateChange()" ng-value="date" style="margin: 0 10px;" required>
             <button class="btn btn-default" ng-click="nextDay()">
                 <span class="fas fa-chevron-right"></span>
             </button>
-        </div>
-
-        <!-- Group Filter Dropdown (future backend support) -->
-        <!--
-        <div class="col-sm-6 text-right">
-            <select class="form-control" ng-model="selectedGroup" ng-change="fetchLogs()">
-                <option value="">All Groups</option>
-                <option ng-repeat="group in groups" value="{{group.id}}">{{group.name}}</option>
+            <select ng-model="sortOrder" ng-change="fetchLogs()" style="margin-left: 10px;">
+                <option value="alphabetical">Sort: Alphabetical</option>
+                <option value="contribution">Sort: Most Contributions</option>
             </select>
         </div>
-        -->
-    </div>
-
-    <div class="row" ng-show="logs.length > 0">
-        <div class="col-sm-12">
-            <div id="timeline" style="height: 400px;"></div>
+        <div class="col-sm-6 text-right">
+            <div class="form-group">
+                <label>Filter by Group:</label>
+                <select class="form-control" ng-model="selectedGroup" ng-change="fetchLogs()">
+                    <option value="">All Groups</option>
+                    <option ng-repeat="group in availableGroups" value="{{group}}">{{group}}</option>
+                </select>
+            </div>
+            <div class="legend">
+                <span class="label label-primary" style="background-color: #4285F4;">Document Create</span>
+                <span class="label label-warning" style="background-color: #F4B400;">Document Update</span>
+                <span class="label label-info" style="background-color: #AB47BC;">Comment</span>
+            </div>
         </div>
     </div>
-
     <div class="row" ng-show="logs.length > 0">
         <div class="col-sm-12">
-            <h4>Per-user activity</h4>
-            <div class="panel panel-default" ng-repeat="(username, userLogs) in userGroupedLogs">
-                <div class="panel-heading" ng-click="toggleExpand(username)" style="cursor: pointer;">
-                    <strong>{{ username }}</strong>
-                    <span class="pull-right">
-                        <i class="fas" ng-class="{'fa-chevron-down': expandedUsers[username], 'fa-chevron-right': !expandedUsers[username]}"></i>
-                    </span>
-                </div>
-                <div class="panel-body" ng-if="expandedUsers[username]">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-condensed">
-                            <thead>
-                            <tr>
-                                <th>Document</th>
-                                <th>Type</th>
-                                <th>Time</th>
-                                <th>Message</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="log in userLogs">
-                                <td>{{ log.target }}</td>
-                                <td>{{ log.type }}</td>
-                                <td>{{ log.create_date | date:'shortTime' }}</td>
-                                <td>{{ log.message }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <div id="timeline" style="width: 100%; height: 500px; overflow-x: auto;"></div>
         </div>
     </div>
 </div>
