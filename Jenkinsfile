@@ -12,9 +12,9 @@ pipeline {
     DOCKER_TAG = "${BUILD_NUMBER}"
 
     // Kubernetes deployment configuration
-    DEPLOYMENT_NAME = "teedy-deployment"          // replace with actual deployment name
-    CONTAINER_NAME = "teedy-container"            // container name in your K8s YAML
-    IMAGE_NAME = "${DOCKER_IMAGE}:${DOCKER_TAG}"  // full image with tag
+    DEPLOYMENT_NAME = "teedy"
+    CONTAINER_NAME = "teedy"
+    IMAGE_NAME = "${DOCKER_IMAGE}:${DOCKER_TAG}"
     K8S_SECRET_NAME = "myregistrykey"
   }
 
@@ -52,14 +52,11 @@ pipeline {
     stage('Deploy to Kubernetes') {
       steps {
         sh '''
-          # Replace image tag with the new build number in YAML
-          sed -i "s#image: 12310948/teedy:.*#image: 12310948/teedy:${BUILD_NUMBER}#" teedy.yaml
+          echo "Updating image in Kubernetes..."
+          kubectl set image deployment/${DEPLOYMENT_NAME} ${CONTAINER_NAME}=${IMAGE_NAME}
 
-          # Apply deployment YAML (with the secret configured)
-          kubectl apply -f teedy.yaml
-
-          # Wait for rollout to complete
-          kubectl rollout status deployment/teedy
+          echo "Waiting for rollout to complete..."
+          kubectl rollout status deployment/${DEPLOYMENT_NAME}
         '''
       }
     }
