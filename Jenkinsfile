@@ -10,6 +10,12 @@ pipeline {
 
     // Use Jenkins build number as Docker tag
     DOCKER_TAG = "${BUILD_NUMBER}"
+
+    // Kubernetes deployment configuration
+    DEPLOYMENT_NAME = "teedy-deployment"          // replace with actual deployment name
+    CONTAINER_NAME = "teedy-container"            // container name in your K8s YAML
+    IMAGE_NAME = "${DOCKER_IMAGE}:${DOCKER_TAG}"  // full image with tag
+    K8S_SECRET_NAME = "myregistrykey"
   }
 
   stages {
@@ -37,28 +43,63 @@ pipeline {
         script {
           docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_login') {
             docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest') // Optional
+            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest') // optional
           }
         }
       }
     }
 
-    stage('Run Containers') {
+    stage('Deploy to Kubernetes') {
       steps {
-        script {
-          // Stop and remove any existing containers
-          sh 'docker rm -f teedy-container-8082 || true'
-          sh 'docker rm -f teedy-container-8083 || true'
-          sh 'docker rm -f teedy-container-8084 || true'
+        sh '''
+          # Replace image tag with the new build number in YAML
+          sed -i "s#image: 12310948/teedy:.*#image: 12310948/teedy:${BUILD_NUMBER}#" teedy.yaml
 
-          // Run three containers with the current image
-          sh "docker run --name teedy-container-8082 -d -p 8082:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
-          sh "docker run --name teedy-container-8083 -d -p 8083:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
-          sh "docker run --name teedy-container-8084 -d -p 8084:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+          # Apply deployment YAML (with the secret configured)
+          kubectl apply -f teedy.yaml
 
-          // List running containers
-          sh 'docker ps --filter "name=teedy-container"'
-        }
+          # Wait for rollout to complete
+          kubectl rollout status deployment/teedy
+        '''
+      }
+    }
+
+    stage('Start Minikube') {
+      steps {
+        sh '''
+          if ! minikube status | grep -q "Running"; then
+            echo "Starting Minikube..."
+            minikube start
+          else
+            echo "Minikube already running."
+          fi
+        '''
+      }
+    }
+
+    stage('Patch Image Pull Secret') {
+      steps {
+        sh '''
+          echo "Patching deployment to use imagePullSecrets..."
+          kubectl patch deployment teedy -p '{"spec":{"template":{"spec":{"imagePullSecrets":[{"name":"myregistrykey"}]}}}}'
+        '''
+      }
+    }
+
+    stage('Expose Service') {
+      steps {
+        sh '''
+          if ! kubectl get svc teedy > /dev/null 2>&1; then
+            kubectl expose deployment teedy --type=NodePort --port=8080
+          fi
+        '''
+      }
+    }
+
+    stage('Verify Rollout') {
+      steps {
+        sh 'kubectl rollout status deployment/${DEPLOYMENT_NAME}'
+        sh 'kubectl get pods'
       }
     }
   }
