@@ -426,6 +426,15 @@ angular.module('docs',
           controller: 'AdminDashboard'
         }
       }
+    })
+    .state('settings.UserRequest', {
+       url: '/userrequest',
+       views: {
+         'settings': {
+           templateUrl: 'partial/docs/settings.userrequest.html',
+           controller: 'SettingsUserRequest'
+         }
+       }
     });
 
   // Configuring Restangular

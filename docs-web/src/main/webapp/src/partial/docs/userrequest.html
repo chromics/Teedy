@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h3 class="modal-title" translate="userrequest.title">Request an Account</h3>
+</div>
+
+<div class="modal-body">
+    <form name="requestForm" ng-submit="submitRequest()" novalidate>
+        <div class="form-group">
+            <label for="username" translate="userrequest.username_label">Username *</label>
+            <input type="text" id="username" name="username" ng-model="request.username"
+                   placeholder="{{ 'userrequest.username_placeholder' | translate }}"
+                   required class="form-control" />
+            <div ng-show="requestForm.username.$touched && requestForm.username.$invalid" class="text-danger">
+                {{ 'userrequest.username_required' | translate }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" translate="userrequest.email_label">Email *</label>
+            <input type="email" id="email" name="email" ng-model="request.email"
+                   placeholder="{{ 'userrequest.email_placeholder' | translate }}"
+                   required class="form-control" />
+            <div ng-show="requestForm.email.$touched && requestForm.email.$invalid" class="text-danger">
+                {{ 'userrequest.email_invalid' | translate }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" translate="userrequest.password_label">Password *</label>
+            <input type="password" id="password" name="password" ng-model="request.password"
+                   placeholder="{{ 'userrequest.password_placeholder' | translate }}"
+                   required ng-minlength="8" ng-maxlength="50" class="form-control" />
+            <div ng-show="requestForm.password.$touched && requestForm.password.$error.required" class="text-danger">
+                {{ 'userrequest.password_required' | translate }}
+            </div>
+            <div ng-show="requestForm.password.$touched && requestForm.password.$error.minlength" class="text-danger">
+                {{ 'userrequest.password_too_short' | translate }}
+            </div>
+            <div ng-show="requestForm.password.$touched && requestForm.password.$error.maxlength" class="text-danger">
+                {{ 'userrequest.password_too_long' | translate }}
+            </div>
+        </div>
+
+        <p class="text-info">{{ status }}</p>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="submit"
+                    ng-disabled="requestForm.$invalid"
+                    translate="userrequest.submit">Submit</button>
+            <button class="btn btn-default" type="button" ng-click="cancel()" translate="userrequest.cancel">Cancel</button>
+        </div>
+    </form>
+</div>

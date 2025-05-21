@@ -58,10 +58,10 @@ public class UserDao {
             return null;
         }
     }
-    
+
     /**
      * Creates a new user.
-     * 
+     *
      * @param user User to create
      * @param userId User ID
      * @return User ID
@@ -70,7 +70,7 @@ public class UserDao {
     public String create(User user, String userId) throws Exception {
         // Create the user UUID
         user.setId(UUID.randomUUID().toString());
-        
+
         // Checks for user unicity
         EntityManager em = ThreadLocalContext.get().getEntityManager();
         Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
@@ -79,17 +79,16 @@ public class UserDao {
         if (l.size() > 0) {
             throw new Exception("AlreadyExistingUsername");
         }
-        
+
         // Create the user
         user.setCreateDate(new Date());
         user.setPassword(hashPassword(user.getPassword()));
         user.setPrivateKey(EncryptionUtil.generatePrivateKey());
         user.setStorageCurrent(0L);
         em.persist(user);
-        
+
         // Create audit log
         AuditLogUtil.create(user, AuditLogType.CREATE, userId);
-        
         return user.getId();
     }
     
@@ -394,4 +393,16 @@ public class UserDao {
         query.setParameter("toDate", toDate.toDate());
         return ((Number) query.getSingleResult()).longValue();
     }
+
+    public User getActiveByEmail(String email) {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        try {
+            Query q = em.createQuery("select u from User u where u.email = :email and u.deleteDate is null");
+            q.setParameter("email", email);
+            return (User) q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

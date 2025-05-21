@@ -19,6 +19,14 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
     };
     $scope.login();
   };
+
+    // Request account
+    $scope.openRequestAccount = function () {
+      $uibModal.open({
+        templateUrl: 'partial/docs/userrequest.html',
+        controller: 'UserRequestController'
+      });
+    };
   
   // Login
   $scope.login = function() {
