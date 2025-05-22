@@ -14,7 +14,9 @@ angular.module('docs').controller('AdminDashboard', function($scope, Restangular
     'Document-CREATE': '#4285F4', // Blue for Document CREATE
     'Document-UPDATE': '#F4B400', // Orange for Document UPDATE
     'Comment-CREATE': '#AB47BC',  // Purple for Comment CREATE
-    'Comment-UPDATE': '#AB47BC'   // Purple for Comment UPDATE
+    'Comment-UPDATE': '#AB47BC',   // Purple for Comment UPDATE
+    'Document-DELETE': '#FF0000',  // Red
+    'Comment-DELETE': '#FF0000'    // Red
   };
 
   // Helper to ensure valid YYYY-MM-DD format
@@ -158,7 +160,7 @@ angular.module('docs').controller('AdminDashboard', function($scope, Restangular
 
     d3.select(container).selectAll('*').remove();
 
-    const margin = { top: 70, right: 40, bottom: 0, left: 60 }; // Compact left margin for 60px labels
+    const margin = { top: 70, right: 40, bottom: 0, left: 70 }; // Compact left margin for 60px labels
     const width = container.clientWidth - margin.left - margin.right;
     const height = Math.max(400, prepareData().length * 40) - margin.top - margin.bottom;
 

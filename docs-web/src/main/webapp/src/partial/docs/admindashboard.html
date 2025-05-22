@@ -1,10 +1,10 @@
-<div class="container-fluid" ng-controller="AdminDashboard">
+<div class="container-fluid" ng-controller="AdminDashboard" xmlns="http://www.w3.org/1999/html">
     <div class="row well-sm">
         <div class="col-sm-6">
             <button class="btn btn-default" ng-click="previousDay()">
                 <span class="fas fa-chevron-left"></span>
             </button>
-            <input type="date" ng-model="date" ng-change="onDateChange()" ng-value="date" style="margin: 0 10px;" required>
+            <span>{{ date }}</span>
             <button class="btn btn-default" ng-click="nextDay()">
                 <span class="fas fa-chevron-right"></span>
             </button>
@@ -14,17 +14,18 @@
             </select>
         </div>
         <div class="col-sm-6 text-right">
-            <div class="form-group">
-                <label>Filter by Group:</label>
-                <select class="form-control" ng-model="selectedGroup" ng-change="fetchLogs()">
-                    <option value="">All Groups</option>
-                    <option ng-repeat="group in availableGroups" value="{{group}}">{{group}}</option>
-                </select>
-            </div>
+<!--            <div class="form-group">-->
+<!--                <label>Filter by Group:</label>-->
+<!--                <select class="form-control" ng-model="selectedGroup" ng-change="fetchLogs()">-->
+<!--                    <option value="">All Groups</option>-->
+<!--                    <option ng-repeat="group in availableGroups" value="{{group}}">{{group}}</option>-->
+<!--                </select>-->
+<!--            </div>-->
             <div class="legend">
                 <span class="label label-primary" style="background-color: #4285F4;">Document Create</span>
                 <span class="label label-warning" style="background-color: #F4B400;">Document Update</span>
                 <span class="label label-info" style="background-color: #AB47BC;">Comment</span>
+                <span class="label label-info" style="background-color: #FF0000;">Delete</span>
             </div>
         </div>
     </div>
