@@ -198,6 +198,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.4</version>
+    </dependency>
+
   </dependencies>
 
   <distributionManagement>
@@ -240,8 +246,21 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>15</source>
+          <target>15</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

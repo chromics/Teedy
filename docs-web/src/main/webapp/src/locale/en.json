@@ -14,7 +14,48 @@
     "password_lost_sent_title": "Password reset email sent",
     "password_lost_sent_message": "An email has been sent to <strong>{{ username }}</strong> to reset your password",
     "password_lost_error_title": "Password reset error",
-    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset"
+    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset",
+    "request_account": "Request account"
+  },
+  "userrequest": {
+    "title": "Request Account",
+    "username_label": "Username *",
+    "username_placeholder": "Username",
+    "username_required": "Username is required.",
+    "email_label": "Email *",
+    "email_placeholder": "Email",
+    "email_invalid": "Please enter a valid email.",
+    "password_label": "Password *",
+    "password_placeholder": "Password",
+    "password_required": "Password is required.",
+    "submit": "Submit",
+    "request_success": "Your request has been submitted.",
+    "request_error": "There was an error submitting your request.",
+    "validation_error": "Please fill in all required fields.",
+    "request_success": "Your request has been submitted.",
+    "request_error": "There was an error submitting your request.",
+    "username_exists": "This username is already taken.",
+    "email_exists": "An account with this email already exists.",
+    "cancel": "Cancel"
+  },
+  "settings": {
+    "userrequest": {
+      "title": "Pending User Requests",
+      "username": "Username",
+      "email": "Email",
+      "request_date": "Request Date",
+      "actions": "Actions",
+      "approve": "Approve",
+      "reject": "Reject",
+      "no_requests": "No pending requests",
+      "confirm_approve": "Approve user request for \"{{username}}\"?",
+      "confirm_reject": "Reject user request for \"{{username}}\"?",
+      "approve_success": "User request for \"{{username}}\" approved.",
+      "reject_success": "User request for \"{{username}}\" rejected.",
+      "error_approve": "Error approving request.",
+      "error_reject": "Error rejecting request.",
+      "error_load": "Error loading user requests."
+    }
   },
   "passwordlost": {
     "title": "Password lost",
@@ -266,6 +307,8 @@
     }
   },
   "settings": {
+    "menu_user_requests": "User Requests",
+    "menu_admin_activity_dashboard": "User Activity Dashboard",
     "menu_personal_settings": "Personal settings",
     "menu_user_account": "User account",
     "menu_two_factor_auth": "Two-factor authentication",

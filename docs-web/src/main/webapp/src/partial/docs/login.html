@@ -4,7 +4,7 @@
     display: none;
   }
 
-  /* Absolute positionned footer on top of the login background */
+  /* Absolute positioned footer on top of the login background */
   .footer {
     position: absolute;
     bottom: 0;
@@ -25,6 +25,7 @@
     color: #666;
   }
 </style>
+
 <div class="row vertical-center">
   <div class="col-sm-6 col-xs-12 login-box">
     <div class="row">
@@ -76,9 +77,14 @@
 
           <p class="text-center" ng-if="app.guest_login">&nbsp;</p>
 
-          <button type="submit" class="btn btn-default btn-block" ng-if="app.guest_login" ng-click="loginAsGuest()">
-            <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
-          </button>
+          <div ng-if="app.guest_login">
+            <button type="submit" class="btn btn-default btn-block" ng-click="loginAsGuest()">
+              <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
+            </button>
+            <button type="button" class="btn btn-info btn-block" ng-click="openRequestAccount()">
+              <span class="fas fa-user-plus"></span> {{ 'login.request_account' | translate }}
+            </button>
+          </div>
         </form>
       </div>
     </div>

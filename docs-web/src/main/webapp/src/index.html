@@ -17,6 +17,14 @@
     <link rel="stylesheet/less" href="style/main.less" type="text/css" />
     <!-- endref -->
     <link rel="stylesheet" href="../api/theme/stylesheet" type="text/css" id="theme-stylesheet" />
+
+    <!-- vis-timeline -->
+    <link href="https://unpkg.com/vis-timeline@7.7.0/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/vis-timeline@7.7.0/standalone/umd/vis-timeline-graph2d.min.js"></script>
+
+    <!-- d3.js gantt chart -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
     <!-- ref:remove -->
     <script>
       less = {
@@ -60,6 +68,7 @@
     <script src="app/docs/controller/PasswordReset.js" type="text/javascript"></script>
     <script src="app/docs/controller/Navigation.js" type="text/javascript"></script>
     <script src="app/docs/controller/Footer.js" type="text/javascript"></script>
+    <script src="app/docs/controller/UserRequestController.js" type="text/javascript"></script>
     <script src="app/docs/controller/document/Document.js" type="text/javascript"></script>
     <script src="app/docs/controller/document/DocumentDefault.js" type="text/javascript"></script>
     <script src="app/docs/controller/document/DocumentEdit.js" type="text/javascript"></script>
@@ -95,10 +104,13 @@
     <script src="app/docs/controller/settings/SettingsVocabulary.js" type="text/javascript"></script>
     <script src="app/docs/controller/settings/SettingsMetadata.js" type="text/javascript"></script>
     <script src="app/docs/controller/settings/SettingsLdap.js" type="text/javascript"></script>
+    <script src="app/docs/controller/settings/SettingsUserRequest.js" type="text/javascript"></script>
     <script src="app/docs/controller/usergroup/UserGroup.js" type="text/javascript"></script>
     <script src="app/docs/controller/usergroup/UserProfile.js" type="text/javascript"></script>
     <script src="app/docs/controller/usergroup/GroupProfile.js" type="text/javascript"></script>
+    <script src="app/docs/controller/settings/AdminDashboard.js" type="text/javascript"></script>
     <script src="app/docs/service/User.js" type="text/javascript"></script>
+    <script src="app/docs/service/UserRequest.js" type="text/javascript"></script>
     <script src="app/docs/filter/Filesize.js" type="text/javascript"></script>
     <script src="app/docs/directive/SelectTag.js" type="text/javascript"></script>
     <script src="app/docs/directive/SelectRelation.js" type="text/javascript"></script>
