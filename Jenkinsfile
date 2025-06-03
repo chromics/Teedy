@@ -19,30 +19,30 @@ pipeline {
   }
 
   stages {
-    stage('Build') {
-      steps {
-        sh 'mvn -B -DskipTests clean package'
-      }
-    }
-
-    stage('Build Docker Image') {
-      steps {
-        script {
-          docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-        }
-      }
-    }
-
-    stage('Push to Docker Hub') {
-      steps {
-        script {
-          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_login') {
-            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-            docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest') // optional
-          }
-        }
-      }
-    }
+//     stage('Build') {
+//       steps {
+//         sh 'mvn -B -DskipTests clean package'
+//       }
+//     }
+//
+//     stage('Build Docker Image') {
+//       steps {
+//         script {
+//           docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+//         }
+//       }
+//     }
+//
+//     stage('Push to Docker Hub') {
+//       steps {
+//         script {
+//           docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_login') {
+//             docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+//             docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest') // optional
+//           }
+//         }
+//       }
+//     }
 
     stage('Deploy to Kubernetes') {
       steps {
